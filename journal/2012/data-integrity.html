@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta http-equiv="X-UA-Compatible" content="">
+
+  <title>Data Integrity | chrismoylan.com</title>
+
+  <meta name="description" content="Computers can be funny sometimes">
+  <meta name="author" content="Chris Moylan">
+  <meta name="viewport" content="width=device-width">
+  <meta name="google-site-verification" content="ldcE9lKkc0x6mIMPqiALWrNQYiBTWMr2t5ye5Dd8aqo" />
+
+  
+      <link rel="stylesheet" href="/media/css/reset.css" />
+    <!--link rel="stylesheet" href="/media/css/normalize.css"-->
+    <link rel="stylesheet" href="/media/css/site.css" />
+    <link rel="stylesheet" href="/media/css/syntax.css" />
+    <link rel="stylesheet" href="/media/css/mobile.css" media="only screen and (max-device-width: 600px)" />
+      <script src="/media/js/libs/modernizr-1.7.min.js"></script>
+  </head>
+<body id="data-integrity">
+  <div class="wrapper">
+
+          <header class="top banner cf">
+        <div class="inner">
+          <div class="left">
+                        <a href ="/" title="home" class="logo">chris moylan</a>
+            </div>
+
+                              <nav class=main-nav>
+      <ul>
+                    <li class="nav-item">
+              <a title="Journal"
+                  class="button white journal nav-link"
+                  href="/journal">journal</a>
+          </li>          <li class="nav-item">
+              <a title="About"
+                  class="button white about nav-link"
+                  href="/about">about</a>
+          </li>      </ul>
+    </nav>
+                  </div>
+      </header>
+
+      <section class="inner main">
+        <article class="post journal">
+  <header class="journal cf">
+    <time datetime="2012-05-01" class="datetime">
+        Tue, 01 May 2012
+    </time>
+    <h1 class="title">
+      Data Integrity
+    </h1>
+    <nav class="journal breadcrumb">
+      <a href="/">Home</a>
+      »
+      <a href="/journal">Journal</a>
+      »
+      Data Integrity
+    </nav>
+  </header>
+
+  <p>You may have noticed that my website has been pretty barren lately. I suffered
+massive data loss when the hard drive in my home server died. I had been running
+the server as a virtual machine in the hopes that as long as I backed up the
+disk image I would be safe from hardware failures. I would have been correct if
+I had bothered to back up the disk image. So in late January of this year the
+drive failed, the server crashed and I lost&nbsp;everything.</p>
+<p>When I realized the server wasn&#8217;t coming back on-line, I put a simple page up so
+that I wouldn&#8217;t lose my place at the top of Google for &#8220;Chris Moylan&#8221; searches.
+I also faced a tricky recovery process. If it had just been my data I would have
+shrugged it off and started fresh. But I was also hosting sites for friends,
+including the blog of my friend <a href="http://mattbutterfield.com">Matt</a> who had
+<em>years</em> of entries and&nbsp;images.</p>
+<p>I managed to get everything back in some form or another. Luckily I recovered
+all of Matt&#8217;s data and returned it to him. He promptly set up his blog on
+a <a href="https://github.com/m-butterfield/m-butterfield.github.com">different host</a>
+and I don&#8217;t blame him at all. I decided to pay for email hosting (I had been
+hosting it myself) and found an <a href="http://www.tuffmail.com">awesome provider</a>. In
+the future, if I want to host my own email server, I can use their service as
+a fallback. I took the time to migrate my site over to
+<a href="http://hyde.github.com/">Hyde</a>, a static site generator. I had been using
+<a href="http://www.pylonsproject.org/">Pylons</a>, a Python <span class="caps">MVC</span> framework, but decided
+I didn&#8217;t need all of that&nbsp;complexity.</p>
+<p>I had some free time last weekend so I set the server up again. I&#8217;m going with
+the same setup - a virtual server running on top of a physical server. Unlike
+last time, I am going to stick with some sort of backup schedule or add a <span class="caps">RAID</span>
+setup. This incident hasn&#8217;t deterred me from running a server out of my closet.
+It was a great learning experience, one that I plan to continue. But I now
+realize that any system with non-trivial uptime has a non-trivial risk of
+catastrophic failure. If you acknowledge this and plan for the day when your data
+goes out the window, it&#8217;s not big&nbsp;deal.</p></article>
+
+<!--nav class="post_nav">
+<a class="backlink" href="/journal/2012">Back to list</a>
+<a class="prev"
+    title="Paying for email"
+        href="/journal/2012/paying-for-email">
+    Previous
+</a>
+<a class="next disabled"
+    title=""
+    >
+    Next
+</a>
+</nav-->      </section>
+
+      <!--<footer class="inner">-->
+      <footer>
+        <div class="inner">
+                              <nav class=footer-nav>
+      <ul>
+                    <li class="nav-item">
+              <a title="Journal"
+                  class="button white journal nav-link"
+                  href="/journal">journal</a>
+          </li>          <li class="nav-item">
+              <a title="About"
+                  class="button white about nav-link"
+                  href="/about">about</a>
+          </li>      </ul>
+    </nav>
+          
+                  </div>
+      </footer>
+    
+                    
+            <!--[if lt IE 7 ]>
+        <script src="js/libs/dd_belatedpng.js"></script>
+        <script>DD_belatedPNG.fix('img, .png_bg');</script>
+      <![endif]-->
+
+    
+  </div> <!-- wrapper -->
+
+  <div class="praetorians">
+    <a href="/praetorian">&pi;</a>
+  </div>
+</body>
+</html>

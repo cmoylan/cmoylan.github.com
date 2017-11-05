@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta http-equiv="X-UA-Compatible" content="">
+
+  <title>Reversing | chrismoylan.com</title>
+
+  <meta name="description" content="When the manual isn't good enough">
+  <meta name="author" content="Chris Moylan">
+  <meta name="viewport" content="width=device-width">
+  <meta name="google-site-verification" content="ldcE9lKkc0x6mIMPqiALWrNQYiBTWMr2t5ye5Dd8aqo" />
+
+  
+      <link rel="stylesheet" href="/media/css/reset.css" />
+    <!--link rel="stylesheet" href="/media/css/normalize.css"-->
+    <link rel="stylesheet" href="/media/css/site.css" />
+    <link rel="stylesheet" href="/media/css/syntax.css" />
+    <link rel="stylesheet" href="/media/css/mobile.css" media="only screen and (max-device-width: 600px)" />
+      <script src="/media/js/libs/modernizr-1.7.min.js"></script>
+  </head>
+<body id="reversing">
+  <div class="wrapper">
+
+          <header class="top banner cf">
+        <div class="inner">
+          <div class="left">
+                        <a href ="/" title="home" class="logo">chris moylan</a>
+            </div>
+
+                              <nav class=main-nav>
+      <ul>
+                    <li class="nav-item">
+              <a title="Journal"
+                  class="button white journal nav-link"
+                  href="/journal">journal</a>
+          </li>          <li class="nav-item">
+              <a title="About"
+                  class="button white about nav-link"
+                  href="/about">about</a>
+          </li>      </ul>
+    </nav>
+                  </div>
+      </header>
+
+      <section class="inner main">
+        <article class="post journal">
+  <header class="journal cf">
+    <time datetime="2012-08-02" class="datetime">
+        Thu, 02 Aug 2012
+    </time>
+    <h1 class="title">
+      Reversing
+    </h1>
+    <nav class="journal breadcrumb">
+      <a href="/">Home</a>
+      »
+      <a href="/journal">Journal</a>
+      »
+      Reversing
+    </nav>
+  </header>
+
+  <p>I was recently tasked with doing some web scraping. That is, taking a web page
+and pulling out interesting bits of information. Scraping is usually a last
+resort, or in our case, the only option when a proper <span class="caps">API</span> doesn&#8217;t&nbsp;exist.</p>
+<p>The particular data we were interested in involved automobiles. (Big surprise.)
+Most of it was easy to pick out of the <span class="caps">HTML</span>, except for one thing - the <span class="caps">VIN</span>. <span class="caps">VIN</span>
+is Vehicle Identification Number and is unique to every car. For whatever
+reason, the site I was scraping had obscured the <span class="caps">VIN</span> - probably to deter people
+like me. They were sending the <span class="caps">VIN</span> in an obfuscated form and then decoding it
+with Javascript in the browser. Our script was getting the raw <span class="caps">HTML</span> without
+executing any of the Javascript so we weren&#8217;t getting the correct&nbsp;<span class="caps">VIN</span>.</p>
+<p>As shady as what I&#8217;m describing sounds, I had a legitimate reason for scraping
+the data and permission from the owner, so I set to work trying to figure out
+how they were encoding the <span class="caps">VIN</span>. After a few minutes of digging, I came across the
+following Javascript which was operating on the <span class="caps">HTML</span> with the encoded&nbsp;<span class="caps">VIN</span>:</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">str</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="p">)</span> <span class="p">{</span><br />  <span class="c1">// holds each letter (2 digits)</span><br />  <span class="kd">var</span> <span class="nx">letter</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span><br />  <span class="nx">letter</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="o">+</span> <span class="nx">str</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span><br />&nbsp;<br />  <span class="c1">// build the real decoded value</span><br />  <span class="nx">res</span> <span class="o">+=</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">letter</span><span class="p">,</span> <span class="mi">16</span><span class="p">));</span><br />  <span class="nx">i</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">;</span><br /><span class="p">}</span><br /></pre></div><br /><figcaption>JavaScript</figcaption></figure></div>
+
+<p>Can you tell what&#8217;s going on? Every 2 characters represent a hex number which,
+when converted to decimal represents an ascii character code. I implemented the
+decode function in Ruby like&nbsp;so:</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="n">chunks</span> <span class="o">=</span> <span class="n">encoded_vin</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/.{2}/</span><span class="p">)</span><br /><span class="n">chunks</span><span class="o">.</span><span class="n">collect</span><span class="p">{</span> <span class="o">|</span><span class="n">chunk</span><span class="o">|</span> <span class="n">chunk</span><span class="o">.</span><span class="n">to_i</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">chr</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><br /></pre></div><br /><figcaption>Ruby</figcaption></figure></div>
+
+<p>I threw a few tests around it, added it to the scrape script and had some
+victory&nbsp;coffee.</p></article>
+
+<!--nav class="post_nav">
+<a class="backlink" href="/journal/2012">Back to list</a>
+<a class="prev"
+    title="Rock the Cache-bah"
+        href="/journal/2012/rock-the-cache-bah">
+    Previous
+</a>
+<a class="next"
+    title="Reinventing the Wheel"
+        href="/journal/2012/reinventing-the-wheel">
+    Next
+</a>
+</nav-->      </section>
+
+      <!--<footer class="inner">-->
+      <footer>
+        <div class="inner">
+                              <nav class=footer-nav>
+      <ul>
+                    <li class="nav-item">
+              <a title="Journal"
+                  class="button white journal nav-link"
+                  href="/journal">journal</a>
+          </li>          <li class="nav-item">
+              <a title="About"
+                  class="button white about nav-link"
+                  href="/about">about</a>
+          </li>      </ul>
+    </nav>
+          
+                  </div>
+      </footer>
+    
+                    
+            <!--[if lt IE 7 ]>
+        <script src="js/libs/dd_belatedpng.js"></script>
+        <script>DD_belatedPNG.fix('img, .png_bg');</script>
+      <![endif]-->
+
+    
+  </div> <!-- wrapper -->
+
+  <div class="praetorians">
+    <a href="/praetorian">&pi;</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta http-equiv="X-UA-Compatible" content="">
+
+  <title>Meta Mixins | chrismoylan.com</title>
+
+  <meta name="description" content="Dude what does mine say?">
+  <meta name="author" content="Chris Moylan">
+  <meta name="viewport" content="width=device-width">
+  <meta name="google-site-verification" content="ldcE9lKkc0x6mIMPqiALWrNQYiBTWMr2t5ye5Dd8aqo" />
+
+  
+      <link rel="stylesheet" href="/media/css/reset.css" />
+    <!--link rel="stylesheet" href="/media/css/normalize.css"-->
+    <link rel="stylesheet" href="/media/css/site.css" />
+    <link rel="stylesheet" href="/media/css/syntax.css" />
+    <link rel="stylesheet" href="/media/css/mobile.css" media="only screen and (max-device-width: 600px)" />
+      <script src="/media/js/libs/modernizr-1.7.min.js"></script>
+  </head>
+<body id="meta-mixins">
+  <div class="wrapper">
+
+          <header class="top banner cf">
+        <div class="inner">
+          <div class="left">
+                        <a href ="/" title="home" class="logo">chris moylan</a>
+            </div>
+
+                              <nav class=main-nav>
+      <ul>
+                    <li class="nav-item">
+              <a title="Journal"
+                  class="button white journal nav-link"
+                  href="/journal">journal</a>
+          </li>          <li class="nav-item">
+              <a title="About"
+                  class="button white about nav-link"
+                  href="/about">about</a>
+          </li>      </ul>
+    </nav>
+                  </div>
+      </header>
+
+      <section class="inner main">
+        <article class="post journal">
+  <header class="journal cf">
+    <time datetime="2014-11-08" class="datetime">
+        Sat, 08 Nov 2014
+    </time>
+    <h1 class="title">
+      Meta Mixins
+    </h1>
+    <nav class="journal breadcrumb">
+      <a href="/">Home</a>
+      »
+      <a href="/journal">Journal</a>
+      »
+      Meta Mixins
+    </nav>
+  </header>
+
+  <p>Let&#8217;s pretend that we&#8217;re Rails developers at Widgets Inc, and our boss asks us
+to figure out which month was the best for widget production. Let&#8217;s assume
+there&#8217;s nothing complicated about our Widget model, and our back end is some <span class="caps">SQL</span>
+flavor. We&#8217;ll also assume that timezones don&#8217;t exist for&nbsp;simplicity.</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Widget</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span><br />  <span class="c1"># nothing complicated          </span><br /><span class="k">end</span><br /></pre></div><br /><figcaption>Ruby</figcaption></figure></div>
+
+<h2>Grouping</h2>
+<p>To do this, we&#8217;ll get the count of Widget objects and group that by month. We&#8217;ll
+assume we have a <code>created_at</code> column on our Widgets&nbsp;table.</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre>pry(main)&gt; Widget.group(&#39;month(created_at)&#39;).count<br />=&gt; {3=&gt;20, 4=&gt;15}<br /></pre></div><br /><figcaption>Text only</figcaption></figure></div>
+
+<p>This isn&#8217;t quite what we want. Say our widget counts look like&nbsp;this:</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre>2013:<br />March - 10<br />April - 14<br />&nbsp;<br />2014:<br />March - 10<br />April - 1<br /></pre></div><br /><figcaption>Text only</figcaption></figure></div>
+
+<p>Our query tells us we created 20 widgets in March and 15 in April, which is
+technically correct, but probably not what our boss wants. We need to add the
+year to the grouping. We can pass this as an array to <code>group</code>.</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre>pry(main)&gt; Widget.group([&#39;year(created_at)&#39;, &#39;month(created_at)&#39;]).count<br />=&gt; {[2013, 3]=&gt;10, [2013, 4]=&gt;14, [2014, 3]=&gt;10, [2014, 4]=&gt;1}<br /></pre></div><br /><figcaption>Text only</figcaption></figure></div>
+
+<p>That looks better! We can clearly see that April 2013 was the biggest month for
+widget production. Let&#8217;s add that to our&nbsp;model.</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Widget</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span><br />  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">best_month_ever</span><br />    <span class="n">group</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;year(created_at)&#39;</span><span class="p">,</span> <span class="s1">&#39;month(created_at)&#39;</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><br />  <span class="k">end</span><br /><span class="k">end</span><br /></pre></div><br /><figcaption>Ruby</figcaption></figure></div>
+
+<p>We want to call <code>best_month_ever</code> directly on <code>Widget</code>, so define it as a
+class method.  Keep in mind that the preceding code will return a hash of all
+counts for all months.  Since <code>Hash</code> includes the <code>Enumerable</code> module, we can
+call <code>.max</code> on the result set.  That will work, but it would be nice if our
+database results were already sorted.  Let&#8217;s look at the query that ActiveRecord
+generates and see how we could accomplish&nbsp;that.</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre>pry(main)&gt; Widget.group([&#39;year(created_at)&#39;, &#39;month(created_at)&#39;]).count<br />(0.3ms)  <span class="caps">SELECT</span> <span class="caps">COUNT</span>(*) <span class="caps">AS</span> count_all,<br />                year(created_at) <span class="caps">AS</span> year_created_at,<br />                month(created_at) <span class="caps">AS</span> month_created_at<br />         <span class="caps">FROM</span> `widgets` <span class="caps">GROUP</span> <span class="caps">BY</span> year(created_at), month(created_at)<br /></pre></div><br /><figcaption>Text only</figcaption></figure></div>
+
+<p>You can see that our count is aliased as &#8216;count_all&#8217;. Let&#8217;s try ordering by&nbsp;that.</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre>pry(main)&gt; Widget.group([&#39;year(created_at)&#39;,&#39;month(created_at)&#39;]).order(&#39;count_all DESC&#39;).count<br />(0.7ms)  <span class="caps">SELECT</span> <span class="caps">COUNT</span>(*) <span class="caps">AS</span> count_all,<br />                year(created_at) <span class="caps">AS</span> year_created_at,<br />                month(created_at) <span class="caps">AS</span> month_created_at<br />         <span class="caps">FROM</span> `widgets` <span class="caps">GROUP</span> <span class="caps">BY</span> year(created_at), month(created_at)<br />         <span class="caps">ORDER</span> <span class="caps">BY</span> count_all <span class="caps">DESC</span><br />=&gt; {[2013, 4]=&gt;14, [2013, 3]=&gt;10,  [2014, 3]=&gt;10, [2014, 4]=&gt;1}<br /></pre></div><br /><figcaption>Text only</figcaption></figure></div>
+
+<p>That pushed the sorting to the database. This solution is somewhat brittle
+because if future versions of ActiveRecord change how counts are aliased,
+this code could stop working. As far as I know there is no way to set
+the alias that the <code>.count</code> method will use. Considering there will be
+12 counts per year, even if we&#8217;ve been producing widgets for 100 years,
+that&#8217;s going to be a relatively small hash. I think in this case, it&#8217;s
+fine to do the sort on the hash, rather than in the&nbsp;database.</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">best_month_ever</span><br />  <span class="n">group</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;year(created_at)&#39;</span><span class="p">,</span> <span class="s1">&#39;month(created_at)&#39;</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="o">.</span><span class="n">max</span><br /><span class="k">end</span><br /></pre></div><br /><figcaption>Ruby</figcaption></figure></div>
+
+<h2>Caching</h2>
+<p>So far, so good. If you think about it though, the historical data isn&#8217;t going
+to change, so there&#8217;s no need to run that query every time. The only count that
+changes is the count for the current month (as we continue to produce widgets.)
+Let&#8217;s cache the historical record, and just get the count for the current month.
+If the current month is our &#8216;best month ever&#8217; we&#8217;ll break the cache and
+update the record. The first piece is a scope for the current&nbsp;month.</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="n">scope</span> <span class="ss">:this_month</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">where</span><span class="p">(</span><span class="s1">&#39;created_at &gt; ?&#39;</span><span class="p">,</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">beginning_of_month</span><span class="p">)</span> <span class="p">}</span><br />&nbsp;<br /><span class="c1"># Widget.this_month.count</span><br /></pre></div><br /><figcaption>Ruby</figcaption></figure></div>
+
+<p>Now that we have the count for the current month, we can make the modifications
+to <code>best_month_ever</code>.</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">best_month_ever</span><br />  <span class="n">record</span> <span class="o">=</span> <span class="no">Rails</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;monthly_widget_record&#39;</span><span class="p">)</span> <span class="k">do</span><br />    <span class="n">group</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;year(created_at)&#39;</span><span class="p">,</span> <span class="s1">&#39;month(created_at)&#39;</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="o">.</span><span class="n">max</span><br />  <span class="k">end</span><br />&nbsp;<br />  <span class="n">this_month</span> <span class="o">=</span> <span class="no">Widget</span><span class="o">.</span><span class="n">this_month</span><span class="o">.</span><span class="n">count</span><br />  <span class="no">Rails</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s1">&#39;monthly_widget_record&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">last</span> <span class="o">&lt;</span> <span class="n">this_month</span><br />&nbsp;<br />  <span class="o">[</span><span class="n">record</span><span class="p">,</span> <span class="n">this_month</span><span class="o">].</span><span class="n">max</span><br /><span class="k">end</span><br /></pre></div><br /><figcaption>Ruby</figcaption></figure></div>
+
+<p><code>record</code> is an <code>OrderedHash</code> which will look something like this
+<code>[[2013, 4], 14]</code>, so when comparing it to <code>this_month</code> (which is just
+an integer) we only care about the count, which is the last item in
+the array. That&#8217;s where the <code>.last</code> comes&nbsp;from.</p>
+<h2>Scope&nbsp;creep</h2>
+<p>We deliver this solution and the management loves it. &#8220;But wait, we want weekly
+records as well,&#8221; they say. It&#8217;s probably a good idea at this point to make the
+code a little more flexible. It&#8217;s simple to get the weekly record, only the
+<code>.group</code> call has to change. We could copy/paste and be done in 5 seconds, but
+what fun is that? Let&#8217;s rewrite this to be flexible. We&#8217;ll modify the method
+to accept a time frame, something like &#8216;month&#8217;, &#8216;week&#8217; or&nbsp;&#8216;day&#8217;.</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">record_for</span><span class="p">(</span><span class="n">time_frame</span><span class="p">)</span><br />  <span class="n">time_frames</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">,</span> <span class="s1">&#39;day&#39;</span><span class="o">]</span><br />  <span class="k">raise</span> <span class="no">ArgumentError</span><span class="p">,</span> <span class="s1">&#39;Unsupported time frame&#39;</span> <span class="k">unless</span> <span class="n">time_frame</span><span class="o">.</span><span class="n">in?</span><span class="p">(</span><span class="n">time_frames</span><span class="p">)</span><br />&nbsp;<br />  <span class="n">record</span> <span class="o">=</span> <span class="no">Rails</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;widget_</span><span class="si">#{</span><span class="n">time_frame</span><span class="si">}</span><span class="s2">_record&quot;</span><span class="p">)</span> <span class="k">do</span><br />    <span class="n">group</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;year(created_at)&#39;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">time_frame</span><span class="si">}</span><span class="s2">(created_at)&quot;</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="o">.</span><span class="n">max</span><br />  <span class="k">end</span><br />&nbsp;<br />  <span class="n">this_period</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;this_</span><span class="si">#{</span><span class="n">time_frame</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><br />  <span class="no">Rails</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;widget_</span><span class="si">#{</span><span class="n">time_frame</span><span class="si">}</span><span class="s2">_record&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">last</span> <span class="o">&lt;</span> <span class="n">this_period</span><br />&nbsp;<br />  <span class="o">[</span><span class="n">record</span><span class="p">,</span> <span class="n">this_period</span><span class="o">].</span><span class="n">max</span><br /><span class="k">end</span><br /></pre></div><br /><figcaption>Ruby</figcaption></figure></div>
+
+<p>Since we&#8217;re passing the time_frame argument directly to the database, we need to
+make sure that only the supported date functions get through. We&#8217;ll raise an
+argument error if we see anything other than &#8216;month&#8217;, &#8216;week&#8217; or &#8216;day&#8217;. Don&#8217;t
+forget to set up the scopes too. I won&#8217;t go through them because they&#8217;re almost
+identical to the <code>this_month</code> scope that we already&nbsp;defined.</p>
+<h2>Getting&nbsp;meta</h2>
+<p>One of the beautiful things about Ruby and Rails is how expressive the code can
+be. Right now, we can call <code>Widget.record_for('month')</code>, which is fine but I&#8217;m
+going to add a little syntactic sugar on top of that. I&#8217;d rather call
+<code>Widget.record_for_month</code>. There&#8217;s really no difference, but it&#8217;s ridiculously
+easy to metaprogram Ruby, so let&#8217;s add a few aliases. Since we need to pass
+an argument into <code>record_for</code> we can&#8217;t just use <code>alias_method</code>, but that is&nbsp;fine.</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Widget</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span><br />&nbsp;<br />  <span class="sx">%w(month day week)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">time_frame</span><span class="o">|</span><br />    <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;record_for_</span><span class="si">#{</span><span class="n">time_frame</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">do</span><br />      <span class="n">record_for</span> <span class="n">time_frame</span><br />    <span class="k">end</span><br />  <span class="k">end</span><br />&nbsp;<br />  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">record_for</span><span class="p">(</span><span class="n">time_frame</span><span class="p">)</span><br />    <span class="o">.</span><span class="n">.</span><span class="o">.</span><br />  <span class="k">end</span><br /><span class="k">end</span><br /></pre></div><br /><figcaption>Ruby</figcaption></figure></div>
+
+<h2>Getting&nbsp;crazy</h2>
+<p>That&#8217;s pretty good. We have a flexible method and some nice syntactic sugar.
+Management loves it. Now they want historical record counts on all of our
+models. Time to make this a module and get just a little more&nbsp;meta.</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="c1"># app/models/concerns/recordable.rb</span><br /><span class="k">module</span> <span class="nn">Recordable</span><br />  <span class="kp">extend</span> <span class="ss">ActiveSupport</span><span class="p">:</span><span class="ss">:Concern</span><br />&nbsp;<br />  <span class="k">module</span> <span class="nn">ClassMethods</span><br />    <span class="no">RECORD_TIME_FRAMES</span> <span class="o">=</span> <span class="sx">%w(month day week)</span><br />&nbsp;<br />    <span class="no">RECORD_TIME_FRAMES</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">time_frame</span><span class="o">|</span><br />      <span class="n">scope</span> <span class="s2">&quot;this_</span><span class="si">#{</span><span class="n">time_frame</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">where</span><span class="p">(</span><span class="s1">&#39;created_at &gt; ?&#39;</span><span class="p">,</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;beginning_of_</span><span class="si">#{</span><span class="n">time_frame</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))}</span><br />&nbsp;<br />      <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;record_for_</span><span class="si">#{</span><span class="n">time_frame</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">do</span><br />        <span class="n">record_for</span> <span class="n">time_frame</span><br />      <span class="k">end</span><br />    <span class="k">end</span><br />&nbsp;<br />    <span class="k">def</span> <span class="nf">record_for</span><span class="p">(</span><span class="n">time_frame</span><span class="p">)</span><br />      <span class="k">raise</span> <span class="no">ArgumentError</span><span class="p">,</span> <span class="s1">&#39;Unsupported time frame&#39;</span> <span class="k">unless</span> <span class="n">time_frame</span><span class="o">.</span><span class="n">in?</span><span class="p">(</span><span class="no">RECORD_TIME_FRAMES</span><span class="p">)</span><br />&nbsp;<br />      <span class="n">cache_key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">downcase</span><span class="si">}</span><span class="s2">_</span><span class="si">#{</span><span class="n">time_frame</span><span class="si">}</span><span class="s2">_record&quot;</span><br />&nbsp;<br />      <span class="n">record</span> <span class="o">=</span> <span class="no">Rails</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">cache_key</span><span class="p">)</span> <span class="k">do</span><br />        <span class="n">group</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;year(created_at)&#39;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">time_frame</span><span class="si">}</span><span class="s2">(created_at)&quot;</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="o">.</span><span class="n">max</span><br />      <span class="k">end</span><br />    <br />      <span class="n">this_period</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;this_</span><span class="si">#{</span><span class="n">time_frame</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><br />      <span class="no">Rails</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">cache_key</span><span class="p">)</span> <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">last</span> <span class="o">&lt;</span> <span class="n">this_period</span><br />    <br />      <span class="o">[</span><span class="n">record</span><span class="p">,</span> <span class="n">this_period</span><span class="o">].</span><span class="n">max</span><br />    <span class="k">end</span><br />  <span class="k">end</span><br /><span class="k">end</span><br />&nbsp;<br /><span class="c1"># app/models/widget.rb</span><br /><span class="k">class</span> <span class="nc">Widget</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span><br />  <span class="kp">include</span> <span class="no">Recordable</span><br /><span class="k">end</span><br /></pre></div><br /><figcaption>Ruby</figcaption></figure></div>
+
+<p>It&#8217;s easy to go overboard with metaprogramming, especially when it&#8217;s this easy.
+But I think our solution is flexible without being difficult to understand. All
+that&#8217;s left to do is submit a pull request and enjoy a hard-earned cup of&nbsp;coffee.</p></article>
+
+<!--nav class="post_nav">
+<a class="backlink" href="/journal/2014">Back to list</a>
+<a class="prev"
+    title="Writing a video game from scratch"
+        href="/journal/2015/writing-a-videogame-from-scratch">
+    Previous
+</a>
+<a class="next"
+    title="The Big Red Button - Part 1"
+        href="/journal/2013/big-red-button-pt-1">
+    Next
+</a>
+</nav-->      </section>
+
+      <!--<footer class="inner">-->
+      <footer>
+        <div class="inner">
+                              <nav class=footer-nav>
+      <ul>
+                    <li class="nav-item">
+              <a title="Journal"
+                  class="button white journal nav-link"
+                  href="/journal">journal</a>
+          </li>          <li class="nav-item">
+              <a title="About"
+                  class="button white about nav-link"
+                  href="/about">about</a>
+          </li>      </ul>
+    </nav>
+          
+                  </div>
+      </footer>
+    
+                    
+            <!--[if lt IE 7 ]>
+        <script src="js/libs/dd_belatedpng.js"></script>
+        <script>DD_belatedPNG.fix('img, .png_bg');</script>
+      <![endif]-->
+
+    
+  </div> <!-- wrapper -->
+
+  <div class="praetorians">
+    <a href="/praetorian">&pi;</a>
+  </div>
+</body>
+</html>

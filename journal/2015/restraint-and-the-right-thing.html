@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta http-equiv="X-UA-Compatible" content="">
+
+  <title>Restraint and the Right Thing | chrismoylan.com</title>
+
+  <meta name="description" content="YAGNI">
+  <meta name="author" content="Chris Moylan">
+  <meta name="viewport" content="width=device-width">
+  <meta name="google-site-verification" content="ldcE9lKkc0x6mIMPqiALWrNQYiBTWMr2t5ye5Dd8aqo" />
+
+  
+      <link rel="stylesheet" href="/media/css/reset.css" />
+    <!--link rel="stylesheet" href="/media/css/normalize.css"-->
+    <link rel="stylesheet" href="/media/css/site.css" />
+    <link rel="stylesheet" href="/media/css/syntax.css" />
+    <link rel="stylesheet" href="/media/css/mobile.css" media="only screen and (max-device-width: 600px)" />
+      <script src="/media/js/libs/modernizr-1.7.min.js"></script>
+  </head>
+<body id="restraint-and-the-right-thing">
+  <div class="wrapper">
+
+          <header class="top banner cf">
+        <div class="inner">
+          <div class="left">
+                        <a href ="/" title="home" class="logo">chris moylan</a>
+            </div>
+
+                              <nav class=main-nav>
+      <ul>
+                    <li class="nav-item">
+              <a title="Journal"
+                  class="button white journal nav-link"
+                  href="/journal">journal</a>
+          </li>          <li class="nav-item">
+              <a title="About"
+                  class="button white about nav-link"
+                  href="/about">about</a>
+          </li>      </ul>
+    </nav>
+                  </div>
+      </header>
+
+      <section class="inner main">
+        <article class="post journal">
+  <header class="journal cf">
+    <time datetime="2015-06-24" class="datetime">
+        Wed, 24 Jun 2015
+    </time>
+    <h1 class="title">
+      Restraint and the Right Thing
+    </h1>
+    <nav class="journal breadcrumb">
+      <a href="/">Home</a>
+      »
+      <a href="/journal">Journal</a>
+      »
+      Restraint and the Right Thing
+    </nav>
+  </header>
+
+  <p>In computer programming, there is this idea called the Right Thing - that for a
+given programming problem there is one, and only one, correct solution. This
+idea is mostly obsolete, but many programers still believe&nbsp;it.</p>
+<p>According to Steven Levy in the book <a href="">Hackers</a>, the idea of the Right Thing sprang
+up at <span class="caps">MIT</span> in the 1960s. At that point, the idea was valid, but there are some
+points to note about the programming environment at the that time and&nbsp;place:</p>
+<ol>
+<li>Everyone had similar technical&nbsp;abilities</li>
+<li>Everyone was working on the same&nbsp;architecture</li>
+<li>Memory and processing power were extremely&nbsp;limited</li>
+</ol>
+<p>Given that environment, it is easy to see how one could conclude that there was
+only one correct way to solve a given problem. If you only have a kilobyte of
+memory, you cut corners to get everything to fit. If your <span class="caps">CPU</span> is running in the
+kilohertz, you make every clock cycle count. And so you ended up with programs
+that were as short and clever as possible to make the best use of the limited
+resources. This was okay, because the programming group was a monoculture,
+and your peers could be expected to understand and appreciate your&nbsp;cleverness.</p>
+<p>But those constraints no longer apply. Let&#8217;s constrast that environment with our
+current&nbsp;one:</p>
+<ol>
+<li>Everyone has different technical&nbsp;abilities</li>
+<li>Everyone is probably working on the same architecture, but may be working on
+   different&nbsp;architectures</li>
+<li>Memory and processing power are vast, readily-available, and&nbsp;cheap.</li>
+</ol>
+<p>Every constraint placed on the early programmers is now gone. Software teams can
+choose how to optimize their programming environments. The Right Thing is now
+relative. Maybe you&#8217;re working on a problem that takes a lot of processing
+power, so you optimize for that. Maybe you deal with terabytes of data, so
+memory and space are still constraints. If you work with embedded systems, you
+will have to deal with&nbsp;both.</p>
+<p>Realistically though, most of us are web developers working on problems that are
+neither new nor novel. We take data, store it, and return it at a later
+time. That&#8217;s it. Given that environment, the Right Thing is different. The
+biggest cost on a software team is the programmers themselves. Therefore, care
+should be taken to write code that is easy to understand and easy to
+maintain. If that is done, the pool of programmers available is as large as
+possible. Clever code requies clever programmers to untangle, and they often
+come at a&nbsp;price.</p>
+<p>In the first draft of this essay, I wrote that &#8220;dumb code was the new Right
+Thing.&#8221;  But this is not correct. Dumb code is easy to write, but not very easy
+to maintain. It&#8217;s what you write when you are a novice, or when you need a quick
+script that will run once. Clever code is worse. It is difficult to write and
+even harder to maintain. (And often, the programmer is not as clever as they
+think.) The balance (as always) is somewhere in the middle, and this is where
+restraint comes in. You write dumb code as a novice, clever code when you know
+just enough to be dangerous, and maintainable code when you have the knowledge
+to be clever, but the wisdom to restrain&nbsp;yourself.</p>
+<p>Programmers are right up there next to evangelicals when it comes to being
+dogmatic and bull-headed. There is a reason that famous programming arguments
+have been called &#8220;religious wars.&#8221; We learn design patterns. We learn about
+objects, factories, Single Responsibility and Tell Don&#8217;t Ask. We learn a slew of
+other acronyms. And we try to use all of this any chance we get, because it&#8217;s
+the &#8220;Right Thing.&#8221; But that&#8217;s academic. Anyone in industry is not being paid to
+be academic. The <span class="caps">CEO</span> is paying you to (1) ship and (2) not cost them an arm and
+a leg when you decide to leave but your code&nbsp;stays.</p>
+<p>I&#8217;m not suggesting that we throw all the design concepts out the window. I think
+many of those ideas can still be useful. But we have to be aware that every
+pattern or abstraction we introduce is one more roadblock in the way of that new
+programmer trying to understand our code. So if you decide to introduce that
+roadblock, you&#8217;d better have a good justification for doing so. And you know
+that fancy <a href="http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/beans/factory/config/ServiceLocatorFactoryBean.html">ServiceLocatorFactoryBean</a> you&#8217;ve been working on? You&#8217;re not going to
+need&nbsp;it.</p></article>
+
+<!--nav class="post_nav">
+<a class="backlink" href="/journal/2015">Back to list</a>
+<a class="prev"
+    title="The Big Red Button - Part 2"
+        href="/journal/2016/big-red-button-pt-2">
+    Previous
+</a>
+<a class="next"
+    title="Writing a video game from scratch"
+        href="/journal/2015/writing-a-videogame-from-scratch">
+    Next
+</a>
+</nav-->      </section>
+
+      <!--<footer class="inner">-->
+      <footer>
+        <div class="inner">
+                              <nav class=footer-nav>
+      <ul>
+                    <li class="nav-item">
+              <a title="Journal"
+                  class="button white journal nav-link"
+                  href="/journal">journal</a>
+          </li>          <li class="nav-item">
+              <a title="About"
+                  class="button white about nav-link"
+                  href="/about">about</a>
+          </li>      </ul>
+    </nav>
+          
+                  </div>
+      </footer>
+    
+                    
+            <!--[if lt IE 7 ]>
+        <script src="js/libs/dd_belatedpng.js"></script>
+        <script>DD_belatedPNG.fix('img, .png_bg');</script>
+      <![endif]-->
+
+    
+  </div> <!-- wrapper -->
+
+  <div class="praetorians">
+    <a href="/praetorian">&pi;</a>
+  </div>
+</body>
+</html>

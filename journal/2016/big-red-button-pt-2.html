@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta http-equiv="X-UA-Compatible" content="">
+
+  <title>The Big Red Button - Part 2 | chrismoylan.com</title>
+
+  <meta name="description" content="TURN YOUR KEY SIR">
+  <meta name="author" content="Chris Moylan">
+  <meta name="viewport" content="width=device-width">
+  <meta name="google-site-verification" content="ldcE9lKkc0x6mIMPqiALWrNQYiBTWMr2t5ye5Dd8aqo" />
+
+  
+      <link rel="stylesheet" href="/media/css/reset.css" />
+    <!--link rel="stylesheet" href="/media/css/normalize.css"-->
+    <link rel="stylesheet" href="/media/css/site.css" />
+    <link rel="stylesheet" href="/media/css/syntax.css" />
+    <link rel="stylesheet" href="/media/css/mobile.css" media="only screen and (max-device-width: 600px)" />
+      <script src="/media/js/libs/modernizr-1.7.min.js"></script>
+  </head>
+<body id="big-red-button-pt-2">
+  <div class="wrapper">
+
+          <header class="top banner cf">
+        <div class="inner">
+          <div class="left">
+                        <a href ="/" title="home" class="logo">chris moylan</a>
+            </div>
+
+                              <nav class=main-nav>
+      <ul>
+                    <li class="nav-item">
+              <a title="Journal"
+                  class="button white journal nav-link"
+                  href="/journal">journal</a>
+          </li>          <li class="nav-item">
+              <a title="About"
+                  class="button white about nav-link"
+                  href="/about">about</a>
+          </li>      </ul>
+    </nav>
+                  </div>
+      </header>
+
+      <section class="inner main">
+        <article class="post journal">
+  <header class="journal cf">
+    <time datetime="2016-05-28" class="datetime">
+        Sat, 28 May 2016
+    </time>
+    <h1 class="title">
+      The Big Red Button - Part 2
+    </h1>
+    <nav class="journal breadcrumb">
+      <a href="/">Home</a>
+      »
+      <a href="/journal">Journal</a>
+      »
+      The Big Red Button - Part 2
+    </nav>
+  </header>
+
+  <p><a href="/journal/2013/big-red-button-pt-1">A long time ago</a> I got some hardware from a
+friend. Among many cool things he gave me 2 over sized red emergency shutoff
+buttons. I knew that there was a project there. I knew <a href="http://digistump.com/products/1">how I was going to do
+it</a>. But I had no idea what to&nbsp;build.</p>
+<p>So let&#8217;s recap. I wanted to build the entire project inside the button, which is
+about the size of 2 stacked decks of cards. I knew I wanted it to do something
+on my computer and I knew I wanted it to be dramatic, like <a href="https://en.wikipedia.org/wiki/WarGames">War Games</a>.
+I started to brainstorm and then a lot of things&nbsp;interfered.</p>
+<p>Last spring I built a stir plate for Cassie. And then we got a really nice
+soldering station. I did a few smaller projects and finally felt ready to finish
+this one. Despite this being a hardware project, the software was the hardest
+part. Because the Digispark is not as widely known as the Arduino, there isn&#8217;t as
+much documentation available. I found myself reading through the source code for
+the chip&#8217;s firmware to figure out how to communicate with the computer over
+<span class="caps">USB</span>. But eventually I got it&nbsp;working.</p>
+<h2>Design</h2>
+<p>The Digispark uses the <a href="http://www.atmel.com/devices/ATTINY85.aspx">ATTiny</a>
+which has 6 configurable <code>i/o</code> pins. Two are used for <span class="caps">USB</span> communication. I needed
+one to detect the button press. That left me with 3 pins to do something cool. I
+decided to use 2 LEDs, independently controlled. I was happy with that design -
+but the sixth, perfectly good, unused pin bugged me. I decided it would be
+really cool to have a buzzer go off during the &#8220;arming&#8221; sequence and that could
+use the last pin. With that design I was fully utilizing the&nbsp;ATTiny.</p>
+<p>When you twist the button it pops up and closes the circuit. When you push it,
+it opens the circuit. I decided the button would begin depressed. You would
+pull it up to &#8220;arm&#8221; it, and then push it down to &#8220;launch&#8221;. These sequences would
+be accompanied by blinking LEDs and annoying buzzers. Upon &#8220;launch&#8221; the
+computer would perform whatever action you had&nbsp;preconfigured.</p>
+<h2>Issues</h2>
+<p>Embedded programming is not something I am used to. The <span class="caps">USB</span> connection requires
+constant refreshing and any call that blocks for too long will kill it.  The
+ATTiny requires you to define a function called <code>loop</code> which is called
+constantly as long as the chip is powered. There is no guarantee how often the
+loop will be run or at what interval. Nothing inside the <code>loop</code> function can
+block.  In most of the Arduino tutorials to blink an <span class="caps">LED</span> you do something like&nbsp;this:</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="c1">// ...</span><br /><span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n"><span class="caps">HIGH</span></span><span class="p">);</span><br /><span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span><br /><span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n"><span class="caps">LOW</span></span><span class="p">);</span><br /><span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span><br /><span class="c1">// ...</span><br /></pre></div><br /><figcaption>C</figcaption></figure></div>
+
+<p>However, this will not work because the <code>delay</code> function hangs for too long and
+kills the <span class="caps">USB</span> connection. To get around this I created some global variables to
+keep track of when the <span class="caps">LED</span> was lasted cycled. That looked like&nbsp;this:</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="kt">int</span> <span class="n">ledState</span> <span class="o">=</span> <span class="n"><span class="caps">HIGH</span></span><span class="p">;</span><br /><span class="kt">long</span> <span class="n">previousBuzzMillis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><br /><span class="c1">// ...</span><br /><span class="kt">void</span> <span class="nf">blink</span><span class="p">(</span><span class="kt">int</span> <span class="n">led</span><span class="p">)</span> <span class="p">{</span><br />    <span class="kt">long</span> <span class="n">timePassed</span> <span class="o">=</span> <span class="n">millis</span><span class="p">()</span> <span class="o">-</span> <span class="n">previousBlinkMillis</span><span class="p">;</span><br />  <br />    <span class="k">if</span> <span class="p">(</span><span class="n">timePassed</span> <span class="o">&gt;</span> <span class="n">blinkInterval</span><span class="p">)</span> <span class="p">{</span><br />        <span class="c1">// if enough time has passed, toggle the light state</span><br />        <span class="n">ledState</span> <span class="o">=</span> <span class="o">!</span><span class="n">ledState</span><span class="p">;</span><br />        <span class="n">previousBlinkMillis</span> <span class="o">=</span> <span class="n">millis</span><span class="p">();</span><br />    <span class="p">}</span><br />  <br />    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">ledState</span><span class="p">);</span><br /><span class="p">}</span><br /></pre></div><br /><figcaption>C</figcaption></figure></div>
+
+<p>Debouncing works the same way. If the button has changed states and
+remained in the new state for a certain amount of time, you can safely
+assume it was actually pushed.  Because the button is a mechanical
+device the connection when it is first pressed or released may
+&#8216;bounce&#8217; open and closed. You need to account for this in the program,
+otherwise there may be intermittent&nbsp;bugs.</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="kt">long</span> <span class="n">lastDebounceTime</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// last time the input was toggled</span><br /><span class="kt">long</span> <span class="n">debounceDelay</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span> <br /><span class="c1">// ..</span><br /><span class="kt">void</span> <span class="nf">handleButton</span><span class="p">()</span> <span class="p">{</span><br />    <span class="kt">int</span> <span class="n">reading</span> <span class="o">=</span> <span class="n">digitalRead</span><span class="p">(</span><span class="n">button</span><span class="p">);</span><br />    <span class="kt">long</span> <span class="n">time</span> <span class="o">=</span> <span class="n">millis</span><span class="p">();</span><br />   <br />    <span class="k">if</span> <span class="p">((</span><span class="n">time</span> <span class="o">-</span> <span class="n">lastDebounceTime</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">debounceDelay</span><span class="p">)</span> <span class="p">{</span><br />        <span class="c1">// whatever the reading is, it&#39;s been there for more than</span><br />        <span class="c1">// the debounce delay, so take it as the current state:</span><br />        <span class="c1">// ...</span><br />    <span class="p">}</span><br /><span class="p">}</span><br /></pre></div><br /><figcaption>C</figcaption></figure></div>
+
+<p>The next issue was hardware-related. The buzzer requires 5 volts. The pins are
+supposed to output 5V, but this is the real world and specs come with a <code>+\-</code>
+tolerance. The pin was only putting out 4.5V, which was not enough to run the
+buzzer.  Fortunately the positive rail was actually supplying 5V, so I just
+needed a way to turn the rail on or off for just the buzzer. This is the perfect
+use-case for a transistor. Sure enough, running the 5V rail into the base of an
+<span class="caps">NPN</span> transistor and pin 6 into the collector did the trick. I was able to use the
+transistor as a valve, and turn the 5V rail on or off for the buzzer using a
+smaller&nbsp;voltage.</p>
+<h2>Execution</h2>
+<p><a href="http://files.chrismoylan.com/images/journal/big-red-button-2/1.jpg"><img alt="Design
+phase" src="http://files.chrismoylan.com/images/journal/big-red-button-2/1-thumb.jpg" /></a> I decided
+to use a small perfboard to hold all of the non-Digispark components. This one
+from Sparkfun, has traces which connect every 3 pins, so you can solder two
+components together on the board, without free-soldering the components&nbsp;directly.</p>
+<p><a href="http://files.chrismoylan.com/images/journal/big-red-button-2/2.jpg"><img alt="USB
+hookup" src="http://files.chrismoylan.com/images/journal/big-red-button-2/2-thumb.jpg" /></a> To connect
+the Digispark to the computer with <span class="caps">USB</span>, I drilled a small hole in the case, cut
+the end of a regular <span class="caps">USB</span> cable, ran it through the hole and attached a new <span class="caps">USB</span>
+connection inside the&nbsp;case.</p>
+<p><a href="http://files.chrismoylan.com/images/journal/big-red-button-2/3.jpg"><img alt="LED holes in the
+case" src="http://files.chrismoylan.com/images/journal/big-red-button-2/3-thumb.jpg" /></a> I drilled
+out the two holes for the LEDs on the top of the&nbsp;enclosure.</p>
+<p><a href="http://files.chrismoylan.com/images/journal/big-red-button-2/4.jpg"><img alt="Soldering on the
+LEDs" src="http://files.chrismoylan.com/images/journal/big-red-button-2/4-thumb.jpg" /></a> Attaching
+the&nbsp;LEDs.</p>
+<p><a href="http://files.chrismoylan.com/images/journal/big-red-button-2/5.jpg"><img alt="My soldering
+sucks" src="http://files.chrismoylan.com/images/journal/big-red-button-2/5-thumb.jpg" /></a> My
+soldering was not the best on this&nbsp;one.</p>
+<p><a href="http://files.chrismoylan.com/images/journal/big-red-button-2/6.jpg"><img alt="Testing" src="http://files.chrismoylan.com/images/journal/big-red-button-2/6-thumb.jpg" /></a> Testing
+everything one more&nbsp;time.</p>
+<p><a href="http://files.chrismoylan.com/images/journal/big-red-button-2/7.jpg"><img alt="Testing
+again" src="http://files.chrismoylan.com/images/journal/big-red-button-2/7-thumb.jpg" /></a> Testing
+everything&nbsp;again.</p>
+<p><a href="http://files.chrismoylan.com/images/journal/big-red-button-2/8.jpg"><img alt="Flashing the
+Digispark" src="http://files.chrismoylan.com/images/journal/big-red-button-2/8-thumb.jpg" /></a> Loading
+the program onto the&nbsp;Digispark.</p>
+<p><a href="http://files.chrismoylan.com/images/journal/big-red-button-2/9.jpg"><img alt="The completed
+circuit" src="http://files.chrismoylan.com/images/journal/big-red-button-2/9-thumb.jpg" /></a> The
+completed circuit. (I needed to neatly jam all of those wires into the small&nbsp;case.)</p>
+<p><a href="http://files.chrismoylan.com/images/journal/big-red-button-2/10.jpg"><img alt="Done" src="http://files.chrismoylan.com/images/journal/big-red-button-2/10-thumb.jpg" /></a> The
+finished&nbsp;product.</p>
+<h3>The way it&nbsp;works</h3>
+<ol>
+<li>Twist the button to arm it. This will sound a buzzer and flash the&nbsp;LEDs.</li>
+<li>When the button is pressed while armed, a command is sent to the connected&nbsp;computer.</li>
+<li>The computer runs the command and returns the status. The button displays an
+  <span class="caps">LED</span> status&nbsp;accordingly.</li>
+<li>If the button is armed and not pressed for 30 seconds, it&nbsp;resets.</li>
+</ol>
+<p><br /></p>
+<h2>The&nbsp;Daemon</h2>
+<p>The hardware portion of this project is just an input device for the computer,
+so I needed some software on the computer to handle the <span class="caps">USB</span> connection and run
+whatever command was preconfigured. I used Ruby to prototype the <span class="caps">USB</span> connection
+and then just stuck with it for the daemon. There&#8217;s a good Digispark
+<a href="https://github.com/Bluebie/digiusb.rb">library</a> out there. The logic of the
+daemon is pretty&nbsp;simple.</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="n">spark</span> <span class="o">=</span> <span class="no">DigiUSB</span><span class="o">.</span><span class="n">Sparks</span><span class="o">.</span><span class="n">last</span><br />&nbsp;<br /><span class="kp">loop</span> <span class="k">do</span><br />  <span class="c1"># try to get a char</span><br />  <span class="n">char</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">getc</span><br />&nbsp;<br />  <span class="k">if</span> <span class="n">char</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><br />    <span class="n">handle</span><span class="p">(</span><span class="n">char</span><span class="p">)</span><br />  <span class="k">else</span><br />    <span class="nb">sleep</span> <span class="mi">1</span><br />  <span class="k">end</span><br /><span class="k">end</span><br /></pre></div><br /><figcaption>Ruby</figcaption></figure></div>
+
+<p>The code to handle the incoming <span class="caps">USB</span> message is&nbsp;here:</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="n">char</span><span class="p">)</span><br />  <span class="k">if</span> <span class="n">char</span> <span class="o">==</span> <span class="s2">&quot;l&quot;</span><br />    <span class="c1"># fork process and run external command</span><br />    <span class="n">pid</span> <span class="o">=</span> <span class="nb">fork</span> <span class="p">{</span> <span class="nb">exec</span> <span class="n">external_command</span> <span class="p">}</span><br />&nbsp;<br />    <span class="c1"># check status of fork</span><br />    <span class="n">_</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="no">Process</span><span class="o">.</span><span class="n">waitpid2</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span><br />&nbsp;<br />    <span class="c1"># return a y/n to the button</span><br />    <span class="k">if</span> <span class="n">status</span><span class="o">.</span><span class="n">success?</span><br />      <span class="n">spark</span><span class="o">.</span><span class="n">putc</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span><br />    <span class="k">else</span><br />      <span class="n">spark</span><span class="o">.</span><span class="n">putc</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span><br />    <span class="k">end</span><br />  <span class="k">end</span><br /><span class="k">end</span><br /></pre></div><br /><figcaption>Ruby</figcaption></figure></div>
+
+<p>It&#8217;s not yet daemonized, but it gets the job done. I just got a shipment of really
+cool parts, so I expect to start the next project soon. Hopefully it won&#8217;t take
+as long to&nbsp;finish.</p>
+<h2>Schematic</h2>
+<p>Here&#8217;s the final design. I haven&#8217;t included the power supply or <span class="caps">USB</span> hookup because
+those things are part of the Digispark itself. Pins 5 and 6 are tied directly to
+the data pins of the <span class="caps">USB</span> connector. Other than that, there is a voltage regulator
+to clean up the 5 volts coming over&nbsp;<span class="caps">USB</span>.</p>
+<p><a href="http://files.chrismoylan.com/images/journal/big-red-button-2/shematic.pdf"><img alt="Schematic" src="//files.chrismoylan.com/images/journal/big-red-button-2/schematic-thumb.png" /></a></p></article>
+
+<!--nav class="post_nav">
+<a class="backlink" href="/journal/2016">Back to list</a>
+<a class="prev disabled"
+    title=""
+    >
+    Previous
+</a>
+<a class="next"
+    title="Restraint and the Right Thing"
+        href="/journal/2015/restraint-and-the-right-thing">
+    Next
+</a>
+</nav-->      </section>
+
+      <!--<footer class="inner">-->
+      <footer>
+        <div class="inner">
+                              <nav class=footer-nav>
+      <ul>
+                    <li class="nav-item">
+              <a title="Journal"
+                  class="button white journal nav-link"
+                  href="/journal">journal</a>
+          </li>          <li class="nav-item">
+              <a title="About"
+                  class="button white about nav-link"
+                  href="/about">about</a>
+          </li>      </ul>
+    </nav>
+          
+                  </div>
+      </footer>
+    
+                    
+            <!--[if lt IE 7 ]>
+        <script src="js/libs/dd_belatedpng.js"></script>
+        <script>DD_belatedPNG.fix('img, .png_bg');</script>
+      <![endif]-->
+
+    
+  </div> <!-- wrapper -->
+
+  <div class="praetorians">
+    <a href="/praetorian">&pi;</a>
+  </div>
+</body>
+</html>

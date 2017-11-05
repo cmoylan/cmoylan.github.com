@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta http-equiv="X-UA-Compatible" content="">
+
+  <title>Writing a video game from scratch | chrismoylan.com</title>
+
+  <meta name="description" content="Why? Just why?">
+  <meta name="author" content="Chris Moylan">
+  <meta name="viewport" content="width=device-width">
+  <meta name="google-site-verification" content="ldcE9lKkc0x6mIMPqiALWrNQYiBTWMr2t5ye5Dd8aqo" />
+
+  
+      <link rel="stylesheet" href="/media/css/reset.css" />
+    <!--link rel="stylesheet" href="/media/css/normalize.css"-->
+    <link rel="stylesheet" href="/media/css/site.css" />
+    <link rel="stylesheet" href="/media/css/syntax.css" />
+    <link rel="stylesheet" href="/media/css/mobile.css" media="only screen and (max-device-width: 600px)" />
+      <script src="/media/js/libs/modernizr-1.7.min.js"></script>
+  </head>
+<body id="writing-a-videogame-from-scratch">
+  <div class="wrapper">
+
+          <header class="top banner cf">
+        <div class="inner">
+          <div class="left">
+                        <a href ="/" title="home" class="logo">chris moylan</a>
+            </div>
+
+                              <nav class=main-nav>
+      <ul>
+                    <li class="nav-item">
+              <a title="Journal"
+                  class="button white journal nav-link"
+                  href="/journal">journal</a>
+          </li>          <li class="nav-item">
+              <a title="About"
+                  class="button white about nav-link"
+                  href="/about">about</a>
+          </li>      </ul>
+    </nav>
+                  </div>
+      </header>
+
+      <section class="inner main">
+        <article class="post journal">
+  <header class="journal cf">
+    <time datetime="2015-04-01" class="datetime">
+        Wed, 01 Apr 2015
+    </time>
+    <h1 class="title">
+      Writing a video game from scratch
+    </h1>
+    <nav class="journal breadcrumb">
+      <a href="/">Home</a>
+      »
+      <a href="/journal">Journal</a>
+      »
+      Writing a video game from scratch
+    </nav>
+  </header>
+
+  <p>This is a project I started about a year ago. When I tell people about
+it I get one of two&nbsp;responses:</p>
+<div class="codebox"><figure class="code"><div class="highlight"><pre>&quot;Oh cool, Unity is great isn&#39;t it?&quot;<br /></pre></div><br /><figcaption>Text only</figcaption></figure></div>
+
+<div class="codebox"><figure class="code"><div class="highlight"><pre>&quot;You&#39;re not writing pixels directly to video memory? You suck.&quot;<br /></pre></div><br /><figcaption>Text only</figcaption></figure></div>
+
+<p>Both statements are
+true. <a href="https://en.wikipedia.org/wiki/Unity_%28game_engine%29">Unity</a>
+is cool, even though I&#8217;m not using it. And I am not writing pixels
+directly to video memory, so it&#8217;s technically not from &#8216;scratch&#8217;. The
+project came about when I realized that even though I&#8217;ve been
+programming computers for a while, I have no idea how graphics
+programming works. It was a chance to learn a new field and get a
+little closer to the hardware - so many of us make our living on port
+80 these&nbsp;days.</p>
+<h2>Decisions</h2>
+<p>I made a deliberate choice not to use any existing game engine. My
+goal is not to make a best-selling video game, but to learn how game
+engines work. The best way to learn how to do something is to do it
+yourself. But I didn&#8217;t want to go <em>too</em> far down the rabbit hole, so I
+chose to use <a href="https://en.wikipedia.org/wiki/Opengl">OpenGL</a> for
+graphics. This allows me to work at a comfortable level of abstraction
+where my code will work on any platform that can run OpenGL.  I want
+to draw things, not worry about variations in graphics&nbsp;cards.</p>
+<p>The other choice I made was to throw mobile out the window. In my
+opinion, mobile games are not games, just clever ads wrapped up in
+psychological manipulation. Games belong on big screens - monitors and&nbsp;TVs.</p>
+<p>OpenGL comes with a C <span class="caps">API</span> and wrappers for every language on Earth. I
+decided to use C++ because it&#8217;s pretty standard in the game
+industry. I also don&#8217;t know it that well, so that was another
+opportunity to learn something&nbsp;new.</p>
+<h2>Design</h2>
+<p>So what does a basic game consist&nbsp;of?</p>
+<ul>
+<li>A character that the user can&nbsp;manipulate</li>
+<li>An&nbsp;objective</li>
+<li>A win&nbsp;state</li>
+</ul>
+<p>That&#8217;s about it. Sounds pretty easy right? Let&#8217;s break those down a
+bit&nbsp;more:</p>
+<ul>
+<li>A character the user can&nbsp;manipulate</li>
+<li>Input handling to convert external input into character&nbsp;movement</li>
+<li>Code to prevent the character from going out of&nbsp;bounds</li>
+<li>Forces external to the character, preventing it from reaching the win&nbsp;state</li>
+<li>Code to tell those forces how to do&nbsp;that</li>
+<li>A system that allows the enemies to impede the character and vice&nbsp;versa</li>
+<li>An&nbsp;objective</li>
+<li>A score to indicate how far along the objective you&nbsp;are</li>
+<li>A win&nbsp;state</li>
+<li>Code to determine if the player has&nbsp;won</li>
+<li>Code to draw all of those things to the&nbsp;screen</li>
+<li>A run&nbsp;loop</li>
+<li>(optional but probably necessary) A menu - or some way to&nbsp;quit</li>
+<li>(optional but probably necessary) A pause&nbsp;state</li>
+<li>If any kind of physics are involved, some kind of physics&nbsp;engine</li>
+</ul>
+<h2>Implementation</h2>
+<p>With all of that in mind, I set out to create the simplest game I
+could, which was a stripped-down version of Space Invaders. <a href="https://github.com/cmoylan/star-commander">And I
+finished it!</a> The
+completed game has a beautiful scrolling space background, 2 ships
+that fire at each other, collision detection to figure out if one hits
+the other, a score based on the number of hits, a win state based on
+the score, a pause state, a menu, and simple rules (I won&#8217;t dare call
+it <span class="caps">AI</span>) for how the enemy reacts to the&nbsp;player.</p>
+<p>The code checks in at just under 1500 lines. I learned a lot about
+graphics and geometry.  I also learned a lot about C++, libraries,
+compilers and debugging. For a hobby project that I was trying to
+finish quickly, the code is actually decent. And now that I have that
+under my belt, I&#8217;m working on a new game. This one will be a 2D
+platformer that supports <a href="http://www.mapeditor.org">Tiled</a>
+levels. Planned features include gravity, death, items, a better
+weapons system, and more than one enemy. Stay&nbsp;tuned.</p>
+<p><img alt="Star Commander" src="http://files.chrismoylan.com/images/journal/videogame/star-commander.gif" /></p></article>
+
+<!--nav class="post_nav">
+<a class="backlink" href="/journal/2015">Back to list</a>
+<a class="prev"
+    title="Restraint and the Right Thing"
+        href="/journal/2015/restraint-and-the-right-thing">
+    Previous
+</a>
+<a class="next"
+    title="Meta Mixins"
+        href="/journal/2014/meta-mixins">
+    Next
+</a>
+</nav-->      </section>
+
+      <!--<footer class="inner">-->
+      <footer>
+        <div class="inner">
+                              <nav class=footer-nav>
+      <ul>
+                    <li class="nav-item">
+              <a title="Journal"
+                  class="button white journal nav-link"
+                  href="/journal">journal</a>
+          </li>          <li class="nav-item">
+              <a title="About"
+                  class="button white about nav-link"
+                  href="/about">about</a>
+          </li>      </ul>
+    </nav>
+          
+                  </div>
+      </footer>
+    
+                    
+            <!--[if lt IE 7 ]>
+        <script src="js/libs/dd_belatedpng.js"></script>
+        <script>DD_belatedPNG.fix('img, .png_bg');</script>
+      <![endif]-->
+
+    
+  </div> <!-- wrapper -->
+
+  <div class="praetorians">
+    <a href="/praetorian">&pi;</a>
+  </div>
+</body>
+</html>

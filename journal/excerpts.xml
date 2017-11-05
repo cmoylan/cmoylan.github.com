@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>
+        BASIC blog excerpts feed    </title>
+        <link href="/journal/excerpts.xml" rel="self" />
+    
+        <link href="/"/>
+    
+        
+    <updated>2017-11-05T12:20:37Z</updated>
+
+    <id>/journal/excerpts.xml/</id>
+
+            <entry>
+            <title type="html">The Big Red Button - Part 2</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2016/big-red-button-pt-2"/>
+            <updated>2016-05-28T13:23:00Z</updated>
+            <published>2016-05-28T13:23:00Z</published>
+            <id>/journal/2016/big-red-button-pt-2</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+            <entry>
+            <title type="html">Restraint and the Right Thing</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2015/restraint-and-the-right-thing"/>
+            <updated>2015-06-24T22:29:00Z</updated>
+            <published>2015-06-24T22:29:00Z</published>
+            <id>/journal/2015/restraint-and-the-right-thing</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+            <entry>
+            <title type="html">Writing a video game from scratch</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2015/writing-a-videogame-from-scratch"/>
+            <updated>2015-04-01T18:05:00Z</updated>
+            <published>2015-04-01T18:05:00Z</published>
+            <id>/journal/2015/writing-a-videogame-from-scratch</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+            <entry>
+            <title type="html">Meta Mixins</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2014/meta-mixins"/>
+            <updated>2014-11-08T08:39:00Z</updated>
+            <published>2014-11-08T08:39:00Z</published>
+            <id>/journal/2014/meta-mixins</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+            <entry>
+            <title type="html">The Big Red Button - Part 1</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2013/big-red-button-pt-1"/>
+            <updated>2013-08-11T22:40:00Z</updated>
+            <published>2013-08-11T22:40:00Z</published>
+            <id>/journal/2013/big-red-button-pt-1</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+            <entry>
+            <title type="html">Headphones Matter</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2013/headphones-matter"/>
+            <updated>2013-04-28T20:20:00Z</updated>
+            <published>2013-04-28T20:20:00Z</published>
+            <id>/journal/2013/headphones-matter</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+            <entry>
+            <title type="html">Cast Iron is the Vinyl of Cookware</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2013/cast-iron"/>
+            <updated>2013-04-08T00:21:17Z</updated>
+            <published>2013-04-08T00:21:17Z</published>
+            <id>/journal/2013/cast-iron</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+            <entry>
+            <title type="html">Why I don't do side work</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2013/why-i-dont-do-side-work"/>
+            <updated>2013-02-13T00:21:00Z</updated>
+            <published>2013-02-13T00:21:00Z</published>
+            <id>/journal/2013/why-i-dont-do-side-work</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+            <entry>
+            <title type="html">The Lost Art of Typography</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2013/lost-art-of-typography"/>
+            <updated>2013-01-31T22:02:00Z</updated>
+            <published>2013-01-31T22:02:00Z</published>
+            <id>/journal/2013/lost-art-of-typography</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+            <entry>
+            <title type="html">Roasted Harvest Salsa</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2012/roasted-harvest-salsa"/>
+            <updated>2012-10-08T11:17:00Z</updated>
+            <published>2012-10-08T11:17:00Z</published>
+            <id>/journal/2012/roasted-harvest-salsa</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+            <entry>
+            <title type="html">Rock the Cache-bah</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2012/rock-the-cache-bah"/>
+            <updated>2012-08-12T10:40:00Z</updated>
+            <published>2012-08-12T10:40:00Z</published>
+            <id>/journal/2012/rock-the-cache-bah</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+            <entry>
+            <title type="html">Reversing</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2012/reversing"/>
+            <updated>2012-08-02T11:17:00Z</updated>
+            <published>2012-08-02T11:17:00Z</published>
+            <id>/journal/2012/reversing</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+            <entry>
+            <title type="html">Reinventing the Wheel</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2012/reinventing-the-wheel"/>
+            <updated>2012-06-03T14:02:00Z</updated>
+            <published>2012-06-03T14:02:00Z</published>
+            <id>/journal/2012/reinventing-the-wheel</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+            <entry>
+            <title type="html">Paying for email</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2012/paying-for-email"/>
+            <updated>2012-05-02T22:03:00Z</updated>
+            <published>2012-05-02T22:03:00Z</published>
+            <id>/journal/2012/paying-for-email</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+            <entry>
+            <title type="html">Data Integrity</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2012/data-integrity"/>
+            <updated>2012-05-01T23:23:00Z</updated>
+            <published>2012-05-01T23:23:00Z</published>
+            <id>/journal/2012/data-integrity</id>
+            
+            <content type="html">
+                
+                            </content>
+        </entry>
+    </feed>

@@ -1,0 +1,19 @@
+body {
+  background: #a2a2a2;
+  height: 100%; }
+
+h1 {
+  font-size: 50px;
+  display: inline; }
+
+.access {
+  margin: 30% auto 0;
+  text-align: center;
+  background: none;
+  color: #000;
+  width: 75%;
+  padding: 15px; }
+
+.access.highlight {
+  background: red;
+  color: #fff; }

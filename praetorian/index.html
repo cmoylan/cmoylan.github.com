@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta http-equiv="X-UA-Compatible" content="">
+
+  <title>Access Main Program Grid</title>
+
+  <!--meta name="description" content="">
+  <meta name="author" content="Chris Moylan">
+  <meta name="viewport" content="width=device-width"-->
+
+  <!--link rel="shortcut icon" href="/media/favicon.ico"-->
+
+  <!-- on github -->
+  <link rel="stylesheet" href="/media/css/praetorian.css" />
+
+  <script src="/media/js/libs/modernizr-1.7.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/mootools/1.4.5/mootools-yui-compressed.js"></script>
+  <!--script src="/media/js/praetorian.js"></script-->
+  <script type="text/javascript">
+    window.addEvent('domready', function() {
+      var access = $('access');
+      var int = window.setInterval(function() {
+        access.toggleClass('highlight');
+      }, 400);
+    });
+  </script>
+
+</head>
+<body>
+  <div class="access highlight" id="access">
+    <h1>UNAUTHORIZED <br /> ACCESS</h1>
+  </div>
+  <!--[if lt IE 7 ]>
+    <script src="js/libs/dd_belatedpng.js"></script>
+    <script>DD_belatedPNG.fix('img, .png_bg');</script>
+  <![endif]-->
+
+</body>
+</html>
