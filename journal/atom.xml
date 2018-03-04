@@ -7,10 +7,32 @@
         <link href="/"/>
     
         
-    <updated>2017-11-05T12:20:37Z</updated>
+    <updated>2018-03-04T12:33:31Z</updated>
 
     <id>/journal/atom.xml/</id>
 
+            <entry>
+            <title type="html">Recording an Album - Part 2</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2018/recording-an-album-pt-2"/>
+            <updated>2018-03-04T12:30:00Z</updated>
+            <published>2018-03-04T12:30:00Z</published>
+            <id>/journal/2018/recording-an-album-pt-2</id>
+            
+            <content type="html">
+                                            </content>
+        </entry>
+            <entry>
+            <title type="html">Recording an Album - Part 1</title>
+            <author><name>Chris Moylan</name></author>
+            <link href="/journal/2018/recording-an-album-pt-1"/>
+            <updated>2018-02-14T00:03:00Z</updated>
+            <published>2018-02-14T00:03:00Z</published>
+            <id>/journal/2018/recording-an-album-pt-1</id>
+            
+            <content type="html">
+                                            </content>
+        </entry>
             <entry>
             <title type="html">The Big Red Button - Part 2</title>
             <author><name>Chris Moylan</name></author>
