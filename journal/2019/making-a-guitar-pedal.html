@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta http-equiv="X-UA-Compatible" content="">
+
+  <title>Building a guitar pedal | chrismoylan.com</title>
+
+  <meta name="description" content="Scream tubes, scream">
+  <meta name="author" content="Chris Moylan">
+  <meta name="viewport" content="width=device-width">
+  <meta name="google-site-verification" content="ldcE9lKkc0x6mIMPqiALWrNQYiBTWMr2t5ye5Dd8aqo" />
+
+  
+      <link rel="stylesheet" href="/media/css/reset.css" />
+    <!--link rel="stylesheet" href="/media/css/normalize.css"-->
+    <link rel="stylesheet" href="/media/css/site.css" />
+    <link rel="stylesheet" href="/media/css/syntax.css" />
+    <link rel="stylesheet" href="/media/css/mobile.css" media="only screen and (max-device-width: 600px)" />
+      <script src="/media/js/libs/modernizr-1.7.min.js"></script>
+  </head>
+<body id="making-a-guitar-pedal">
+  <div class="wrapper">
+
+          <header class="top banner cf">
+        <div class="inner">
+          <div class="left">
+                        <a href ="/" title="home" class="logo">chris moylan</a>
+            </div>
+
+                              <nav class=main-nav>
+      <ul>
+                    <li class="nav-item">
+              <a title="Journal"
+                  class="button white journal nav-link"
+                  href="/journal">journal</a>
+          </li>          <li class="nav-item">
+              <a title="About"
+                  class="button white about nav-link"
+                  href="/about">about</a>
+          </li>      </ul>
+    </nav>
+                  </div>
+      </header>
+
+      <section class="inner main">
+        <article class="post journal">
+  <header class="journal cf">
+    <time datetime="2019-01-13" class="datetime">
+        Sun, 13 Jan 2019
+    </time>
+    <h1 class="title">
+      Building a guitar pedal
+    </h1>
+    <nav class="journal breadcrumb">
+      <a href="/">Home</a>
+      »
+      <a href="/journal">Journal</a>
+      »
+      Building a guitar pedal
+    </nav>
+  </header>
+
+  <p>I woke up New Year&#8217;s Day groggy with a slight hangover. What better cure than
+strong coffee and solder fumes? So down to the basement! There was a project
+already on the bench that just needed a few more&nbsp;wires.</p>
+<p>I have a <a href="http://www.mesaboogie.com/support/out-of-production/tremoverb.html">large tube amp</a>
+that has been gathering dust since I moved to the city.
+Now that I don&#8217;t share walls with anyone it&#8217;s time to revive it. I&#8217;ve never been
+completely happy with the sound. Fortunately, the world of guitar electronics is
+much less complicated than other electronics and you can still tinker without
+needing an advanced&nbsp;degree.</p>
+<p>My plan for the amp is to switch the power tubes (to brighten the sound), leave
+out half of them (to lower the volume), get a smaller speaker cabinet (to lower
+the volume further), run an <span class="caps">EQ</span> in the effects loop (to shape the sound a little
+more) and drive the amp with a boost pedal (to increase the guitar signal and
+overdrive the&nbsp;tubes.)</p>
+<p>Working in reverse order the first item on the list was the boost pedal. Not
+content to buy one and move on I decided to build one. There are many different
+kinds of boost pedals. Some increase the signal without coloring it - clean
+boost. Others increase the signal to the point of clipping - overdrive. Most
+have some tone controls to cut or boost frequencies. There is a legendary
+overdrive pedal called the <a href="https://www.electrosmash.com/tube-screamer-analysis">Tube Screamer</a>
+that I have always wanted to try.
+People much smarter than myself like to reverse engineer guitar pedals and post
+the schematics <a href="http://tonepad.com/projects.asp?projectType=fx">online</a>.
+I found such a version and decided to build&nbsp;it.</p>
+<p>The website hosting the plans sells printed circuit boards. I bought one of
+their boards and ordered the rest of the parts. The circuit board is just for
+the effect - it doesn’t include anything for turning the effect on or off or
+even connecting it to a guitar signal. That part is left up to you. I looked up
+how to do this and ordered the extra supplies to build a complete&nbsp;pedal.</p>
+<p>When everything arrived I soldered the components onto the circuit board. I
+wanted to test it before wiring up the enclosure so I built a test bracket and
+wired the board onto that. I was getting power from a small power supply that I
+use for prototyping. I connected my guitar and the amp to the test bracket and
+held my breath as I turned everything on. No smoke! But also no&nbsp;sound.</p>
+<p><a href="http://chrismoylan.com/images/journal/tube-screamer/test-harness-full.jpg"><img alt="The test harness" src="http://chrismoylan.com/images/journal/tube-screamer/test-harness-thumb.jpg" />
+</a> The board set up
+for&nbsp;testing</p>
+<p>I double-checked every connection, making sure I had placed all of the
+components correctly. Then I saw the problem. I was supplying 5V of power when
+the circuit needed 9V. Classic. When I switched to 9V I heard the speaker in the
+amp buzz to life. I plucked a few strings on the guitar and the amp responded.
+The sound was nice - a crisp crunch. It was&nbsp;working!</p>
+<p>To house the effect I used a metal box about the size of 2 decks of playing
+cards. With calipers I carefully measured out where I wanted the holes for knobs
+and jacks. I drilled them all out. Unfortunately I did not measure perfectly so
+the finished product looks hand-made. (I prefer the term “artisanal.”) After
+placing the knobs and jacks in the enclosure it was time to wire it all
+together. This was the most difficult part of the project because it
+involved a lot of wire routing and free-hand soldering. It’s nice to have plenty
+of wire to work with, but in a small enclosure it can easily become a&nbsp;headache.</p>
+<p>The wiring scheme I used is called “<a href="http://screaminfx.com/tech/what-is-true-bypass-guitar-pedal.htm">true bypass</a>”
+because when the pedal is
+turned off the guitar signal is completely bypassing the effect. Most
+mass-produced pedals are not true bypass. The guitar signal is always undergoing
+some processing. Each style has dis/advantages. Non-true-bypass involves extra
+circuitry, and for homebrew pedals doesn’t make sense. My pedal uses a
+double-throw switch to send the guitar signal either through the effect circuit
+and then to the output (when on) or straight to the output (when&nbsp;off.)</p>
+<p>When the solder had cooled I took the pedal upstairs and again connected it
+between the guitar and the amp. I turned everything on. No smoke! But again no
+sound. The pedal has a green <span class="caps">LED</span> to show when it’s turned on. This did not light
+up, so presumably the issue was power. I was using a 9V adapter with a barrel
+plug to power the pedal. I switched it with an adapter from one of my guitar
+pedals and that worked. But why? I knew the first adapter was working because I
+tested it in another piece of equipment. The answer still puzzles me, but I
+guess it’s “just how it is.” A <a href="https://en.wikipedia.org/wiki/Coaxial_power_connector">barrel plug</a>
+has 2 connections - the outside of
+the barrel is called the sleeve and the inside (which is electrically isolated)
+is called the tip. Every power supply I have ever used puts the ground on the
+sleeve and the voltage on the tip. Except guitar pedals. For whatever reason
+they use the tip as the ground and supply voltage on the sleeve. I should have
+fried my pedal when I plugged in the first adapter and ran the current
+backwards. Fortunately the <span class="caps">LED</span> saved the day. (An <span class="caps">LED</span> is a diode and current can
+only flow in one direction through&nbsp;it.)</p>
+<p>Here’s the finished&nbsp;product.</p>
+<p><a href="http://chrismoylan.com/images/journal/tube-screamer/top-full.jpg"><img alt="The top of the pedal" src="http://chrismoylan.com/images/journal/tube-screamer/top-thumb.jpg" />
+</a></p>
+<p><a href="http://chrismoylan.com/images/journal/tube-screamer/inside-full.jpg"><img alt="The electronic guts" src="http://chrismoylan.com/images/journal/tube-screamer/inside-thumb.jpg" />
+</a></p></article>
+
+<!--nav class="post_nav">
+<a class="backlink" href="/journal/2019">Back to list</a>
+<a class="prev disabled"
+    title=""
+    >
+    Previous
+</a>
+<a class="next"
+    title="Recording an Album - Part 2"
+        href="/journal/2018/recording-an-album-pt-2">
+    Next
+</a>
+</nav-->      </section>
+
+      <!--<footer class="inner">-->
+      <footer>
+        <div class="inner">
+                              <nav class=footer-nav>
+      <ul>
+                    <li class="nav-item">
+              <a title="Journal"
+                  class="button white journal nav-link"
+                  href="/journal">journal</a>
+          </li>          <li class="nav-item">
+              <a title="About"
+                  class="button white about nav-link"
+                  href="/about">about</a>
+          </li>      </ul>
+    </nav>
+          
+                  </div>
+      </footer>
+    
+                    
+            <!--[if lt IE 7 ]>
+        <script src="js/libs/dd_belatedpng.js"></script>
+        <script>DD_belatedPNG.fix('img, .png_bg');</script>
+      <![endif]-->
+
+    
+  </div> <!-- wrapper -->
+
+  <div class="praetorians">
+    <a href="/praetorian">&pi;</a>
+  </div>
+</body>
+</html>
